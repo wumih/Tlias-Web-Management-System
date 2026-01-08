@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="tlias-web-management" />
+        <module name="tlias-pojo" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="aliyun-oss-spring-boot-autoconfigure" target="17" />
+      <module name="aliyun-oss-spring-boot-starter" target="17" />
+      <module name="itheima-utils" target="17" />
+      <module name="jdbc-demo" target="21" />
+      <module name="maven-project01" target="21" />
+      <module name="maven-project02" target="17" />
+      <module name="maven-project03" target="17" />
+      <module name="springboot-autoconfiguration-test" target="17" />
+      <module name="springboot-mybatis-quickstart" target="21" />
+      <module name="springboot-web-01" target="21" />
+      <module name="springboot-web-quickstart" target="17" />
+      <module name="tlias-utils" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="aliyun-oss-spring-boot-autoconfigure" options="-parameters" />
+      <module name="aliyun-oss-spring-boot-starter" options="-parameters" />
+      <module name="springboot-autoconfiguration-test" options="-parameters" />
+      <module name="springboot-mybatis-quickstart" options="-parameters" />
+      <module name="springboot-web-01" options="-parameters" />
+      <module name="springboot-web-quickstart" options="-parameters" />
+      <module name="tlias-pojo" options="-parameters" />
+      <module name="tlias-web-management" options="-parameters" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.OptionMapper">
+    <select id="list" resultType="com.itheima.pojo.Emp">
+        select
+        id, username, password, name, gender, image, job, salary,
+        entry_date as entryDate, dept_id as deptId,
+        create_time as createTime, update_time as updateTime
+        from emp
+        <where>
+            <if test="job != null">
+                and job = #{job}
+            </if>
+        </where>
+    </select>
+</mapper>

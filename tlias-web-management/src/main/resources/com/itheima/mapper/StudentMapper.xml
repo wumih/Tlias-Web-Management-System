@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itheima.mapper.StudentMapper">
+
+    <!-- 条件分页查询 -->
+    <select id="list" resultType="com.itheima.pojo.Student">
+        SELECT
+        s.id,
+        s.name,
+        s.no,
+        s.gender,
+        s.phone,
+        s.id_card          AS idCard,
+        s.is_college       AS isCollege,
+        s.address,
+        s.degree,
+        s.graduation_date  AS graduationDate,
+        s.clazz_id         AS clazzId,
+        s.violation_count  AS violationCount,
+        s.violation_score  AS violationScore,
+        s.create_time      AS createTime,
+        s.update_time      AS updateTime,
+        c.name             AS clazzName
+        FROM student s
+        LEFT JOIN clazz c ON s.clazz_id = c.id
+        <where>
+            <if test="name != null and name != ''">
+                AND s.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="degree != null">
+                AND s.degree = #{degree}
+            </if>
+            <if test="clazzId != null">
+                AND s.clazz_id = #{clazzId}
+            </if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 统计总数 -->
+    <select id="count" resultType="long">
+        SELECT COUNT(*)
+        FROM student s
+        <where>
+            <if test="name != null and name != ''">
+                AND s.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="degree != null">
+                AND s.degree = #{degree}
+            </if>
+            <if test="clazzId != null">
+                AND s.clazz_id = #{clazzId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 添加学员 -->
+    <insert id="insert"
+            parameterType="com.itheima.pojo.Student"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student (
+            name,
+            no,
+            gender,
+            phone,
+            id_card,
+            is_college,
+            address,
+            degree,
+            graduation_date,
+            clazz_id,
+            create_time,
+            update_time
+        ) VALUES (
+                     #{name},
+                     #{no},
+                     #{gender},
+                     #{phone},
+                     #{idCard},
+                     #{isCollege},
+                     #{address},
+                     #{degree},
+                     #{graduationDate},
+                     #{clazzId},
+                     NOW(),
+                     NOW()
+                 )
+    </insert>
+
+    <!-- 根据ID查询学员 -->
+    <select id="selectById" resultType="com.itheima.pojo.Student">
+        SELECT
+            s.id,
+            s.name,
+            s.no,
+            s.gender,
+            s.phone,
+            s.degree,
+            s.id_card AS idCard,
+            s.is_college AS isCollege,
+            s.address,
+            s.graduation_date AS graduationDate,
+            s.violation_count AS violationCount,
+            s.violation_score AS violationScore,
+            s.clazz_id AS clazzId,
+            s.create_time AS createTime,
+            s.update_time AS updateTime,
+            c.name AS clazzName
+        FROM student s
+                 LEFT JOIN clazz c ON s.clazz_id = c.id
+        WHERE s.id = #{id}
+    </select>
+
+    <!-- 修改学员（按主键ID） -->
+    <update id="update" parameterType="com.itheima.pojo.Student">
+        UPDATE student
+        <set>
+            name = #{name},
+            no = #{no},
+            gender = #{gender},
+            phone = #{phone},
+            degree = #{degree},
+            id_card = #{idCard},
+            is_college = #{isCollege},
+            address = #{address},
+            graduation_date = #{graduationDate},
+            violation_count = #{violationCount},
+            violation_score = #{violationScore},
+            clazz_id = #{clazzId},
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量删除 -->
+    <delete id="deleteByIds">
+        DELETE FROM student
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 违纪处理：次数+1，扣分累计+score -->
+    <update id="addViolation">
+        UPDATE student
+        SET violation_count = violation_count + 1,
+            violation_score = violation_score + #{score},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 统计学员学历信息：根据 degree 分组 -->
+    <select id="countStudentDegreeData" resultType="java.util.Map">
+        SELECT
+            CASE degree
+                WHEN 1 THEN '初中'
+                WHEN 2 THEN '高中'
+                WHEN 3 THEN '大专'
+                WHEN 4 THEN '本科'
+                WHEN 5 THEN '硕士'
+                WHEN 6 THEN '博士'
+                ELSE '未知'
+                END AS name,
+            COUNT(*) AS value
+        FROM student
+        GROUP BY degree
+    </select>
+
+
+
+</mapper>

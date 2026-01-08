@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.ClazzMapper">
+
+    <!-- 查询班级列表 -->
+    <select id="getClazzList" resultType="com.itheima.pojo.Clazz">
+        SELECT
+        c.id,
+        c.name,
+        c.room,
+        c.begin_date AS beginDate,
+        c.end_date AS endDate,
+        c.master_id AS masterId,
+        c.subject,
+        c.create_time AS createTime,
+        c.update_time AS updateTime,
+        e.name AS masterName  <!-- 通过master_id与emp表关联，获取班主任姓名 -->
+        FROM clazz c
+        LEFT JOIN emp e ON c.master_id = e.id  <!-- LEFT JOIN emp表，获取班主任的姓名 -->
+        <where>
+            <if test="name != null and name != ''">
+                AND c.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="begin != null and end != null">
+                AND c.end_date BETWEEN #{begin} AND #{end}
+            </if>
+        </where>
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 查询班级总数 -->
+    <select id="getTotalClazzCount" resultType="int">
+        SELECT COUNT(*)
+        FROM clazz c
+        <where>
+            <if test="name != null and name != ''">
+                AND c.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="begin != null and end != null">
+                AND c.end_date BETWEEN #{begin} AND #{end}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入班级 -->
+    <insert id="insert" parameterType="com.itheima.pojo.Clazz">
+        INSERT INTO clazz
+        (name, room, begin_date, end_date, master_id, subject, create_time, update_time)
+        VALUES
+            (#{name}, #{room}, #{beginDate}, #{endDate}, #{masterId}, #{subject}, NOW(), NOW())
+    </insert>
+
+    <!-- 根据ID查询班级 -->
+    <select id="getById" parameterType="int" resultType="com.itheima.pojo.Clazz">
+        SELECT
+            id,
+            name,
+            room,
+            begin_date AS beginDate,
+            end_date AS endDate,
+            master_id AS masterId,
+            subject,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM clazz
+        WHERE id = #{id}
+    </select>
+
+    <!-- 修改班级 -->
+    <update id="update" parameterType="com.itheima.pojo.Clazz">
+        UPDATE clazz
+        SET
+            name = #{name},
+            room = #{room},
+            begin_date = #{beginDate},
+            end_date = #{endDate},
+            master_id = #{masterId},
+            subject = #{subject},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询所有班级 -->
+    <select id="listAll" resultType="com.itheima.pojo.Clazz">
+        SELECT
+            id,
+            name,
+            room,
+            begin_date  AS beginDate,
+            end_date    AS endDate,
+            master_id   AS masterId,
+            subject,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM clazz
+        ORDER BY id DESC
+    </select>
+
+
+</mapper>

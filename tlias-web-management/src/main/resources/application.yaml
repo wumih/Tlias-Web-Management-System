@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: tlias-web-management
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wb01
+    username: root
+    password: 1234
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis:
+  configuration:
+    # 若想统一到日志框架，改成 Slf4jImpl；保留 StdOutImpl 就继续在控制台直打 SQL
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
+    com.itheima: debug
+    org.springframework: warn
+    org.apache.tomcat: warn
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
+
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucketName: java-aitest-mdr
+    region: cn-beijing
+app:
+  jwt:
+    # 至少 32 字节的随机串；生产建议用环境变量覆盖
+    secret: "${APP_JWT_SECRET:replace-with-a-long-random-secret-string-AtLeast32Bytes_1234567890}"
+    expire-millis: 43200000   # 12 小时
+
