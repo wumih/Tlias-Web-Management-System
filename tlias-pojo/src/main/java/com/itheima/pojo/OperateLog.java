@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * 操作日志实体类
+ * 用于记录系统中的操作行为，包括操作人、操作时间、操作方法等信息
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

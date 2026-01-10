@@ -1,5 +1,6 @@
 package com.itheima.pojo;
-
+//这是一个员工实体类，包含员工的基本信息和关联信息
+//使用Lombok的@Data注解自动生成getter/setter方法
 import com.itheima.pojo.EmpExpr;
 import lombok.Data;
 

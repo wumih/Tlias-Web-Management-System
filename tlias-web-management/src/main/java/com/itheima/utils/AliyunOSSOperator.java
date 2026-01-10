@@ -11,7 +11,10 @@ import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-
+/**
+ * 阿里云OSS操作工具类
+ * 提供文件上传到阿里云OSS的功能
+ */
 @Component
 public class AliyunOSSOperator {
 
@@ -25,7 +28,14 @@ public class AliyunOSSOperator {
 
     @Autowired
     private AliyunOSSProperties aliyunOSSProperties;
-
+    /**
+     * 上传文件到阿里云OSS
+     *
+     * @param content 文件内容的字节数组
+     * @param originalFilename 原始文件名，用于获取文件扩展名
+     * @return 上传成功后文件的访问URL
+     * @throws Exception 上传过程中可能出现的异常
+     */
     public String upload(byte[] content, String originalFilename) throws Exception {
         String endpoint = aliyunOSSProperties.getEndpoint();
         String bucketName = aliyunOSSProperties.getBucketName();

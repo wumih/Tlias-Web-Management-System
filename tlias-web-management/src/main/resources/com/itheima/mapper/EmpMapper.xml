@@ -1,4 +1,9 @@
 <!-- 定义 Mapper 映射文件的约束和基本结构 -->
+<!--这是一个MyBatis的Mapper映射文件，定义了员工管理的数据访问操作-->
+<!--        主要功能-->
+<!--        SQL 语句定义：为对应的 Mapper 接口提供具体的 SQL 实现-->
+<!--        结果映射配置：定义数据库字段与 Java 对象属性的映射关系-->
+<!--        复杂查询实现：处理关联查询、条件查询等复杂 SQL 操作-->
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">

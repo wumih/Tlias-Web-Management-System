@@ -1,5 +1,5 @@
 package com.itheima.controller;
-
+//这是一个员工管理的Spring Boot控制器，提供员工信息的增删改查功能。
 import com.itheima.pojo.Emp;
 import com.itheima.pojo.PageResult;
 import com.itheima.pojo.Result;

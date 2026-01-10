@@ -14,10 +14,24 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
+/**
+ * JWT令牌过滤器
+ * 用于验证请求中的JWT令牌，解析用户信息并存储到ThreadLocal中
+ */
 @Slf4j
 @WebFilter(urlPatterns = "/*")
 public class TokenFilter implements Filter {
 
+    /**
+     * 过滤器核心处理方法
+     * 处理请求的JWT令牌验证、解析和用户信息存储
+     *
+     * @param req  Servlet请求对象
+     * @param resp Servlet响应对象
+     * @param chain 过滤器链
+     * @throws IOException  IO异常
+     * @throws ServletException Servlet异常
+     */
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws IOException, ServletException {
@@ -25,7 +39,7 @@ public class TokenFilter implements Filter {
         HttpServletRequest request  = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
-        // 1) 跨域预检直接放行（如是同域可保留也无害）
+        // 跨域预检请求处理
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             chain.doFilter(request, response);
@@ -33,13 +47,13 @@ public class TokenFilter implements Filter {
         }
 
         String uri = request.getRequestURI();
-        // 2) 白名单放行：登录、静态资源、错误页、swagger 等按需补充
+        // 白名单路径放行处理
         if (isWhitelisted(uri)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // 3) 只从 `token` 头取 JWT（你要求的格式）
+        // 从请求头获取JWT令牌
         String jwt = request.getHeader("token");
         if (!StringUtils.hasText(jwt)) {
             write401(response, "缺少令牌"); // 前端会据此跳登录
@@ -47,10 +61,10 @@ public class TokenFilter implements Filter {
         }
 
         try {
-            // 4) 解析 JWT（方法名按你的 JwtUtils 实际为 parseJWT/parseToken）
+            // 解析JWT令牌获取声明信息
             Claims claims = JwtUtils.parseJWT(jwt);
 
-            // 5) 解析用户ID——兼容三种写法：userId / uid / subject(纯数字)
+            // 解析用户ID——兼容三种写法：userId / uid / subject(纯数字)
             Number uidNum = claims.get("userId", Number.class);
             if (uidNum == null) uidNum = claims.get("uid", Number.class);
             if (uidNum == null) {
@@ -62,10 +76,10 @@ public class TokenFilter implements Filter {
                 return;
             }
 
-            // 6) 写入请求上下文，供 AOP 切面读取
+            // 将用户ID写入请求上下文，供AOP切面读取
             CurrentHolder.setCurrentId(uidNum.intValue());
 
-            // 放行
+            // 请求放行
             chain.doFilter(request, response);
 
         } catch (ExpiredJwtException e) {
@@ -78,11 +92,18 @@ public class TokenFilter implements Filter {
             log.warn("令牌校验异常", e);
             write401(response, "令牌校验失败");
         } finally {
-            // 7) 必须清理，避免线程复用导致“串号”
+            // 清理ThreadLocal，避免线程复用导致数据串扰
             CurrentHolder.remove();
         }
     }
 
+    /**
+     * 判断URI是否在白名单中
+     * 白名单路径无需令牌验证直接放行
+     *
+     * @param uri 请求URI
+     * @return true表示在白名单中，false表示不在白名单中
+     */
     private boolean isWhitelisted(String uri) {
         return uri.startsWith("/login")
                 || uri.startsWith("/public")
@@ -94,6 +115,13 @@ public class TokenFilter implements Filter {
                 || uri.startsWith("/favicon.ico");
     }
 
+    /**
+     * 向响应中写入401未授权错误信息
+     *
+     * @param response HTTP响应对象
+     * @param msg 错误消息
+     * @throws IOException IO异常
+     */
     private void write401(HttpServletResponse response, String msg) throws IOException {
         if (response.isCommitted()) return;
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
