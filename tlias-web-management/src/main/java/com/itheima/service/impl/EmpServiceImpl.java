@@ -7,7 +7,7 @@ import com.itheima.mapper.EmpMapper;
 import com.itheima.pojo.*;
 import com.itheima.service.EmpLogService;
 import com.itheima.service.EmpService;
-import com.itheima.util.JwtUtils;
+import com.itheima.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

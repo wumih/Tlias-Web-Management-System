@@ -6,7 +6,7 @@ import com.itheima.pojo.Emp;
 import com.itheima.pojo.EmpLog;
 import com.itheima.pojo.LoginInfo;
 import com.itheima.service.EmpLogService;
-import com.itheima.util.JwtUtils;
+import com.itheima.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;                 // ★ 引入日志
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

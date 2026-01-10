@@ -1,9 +1,11 @@
-package com.itheima.util; // 注意与你项目里的包名一致
+package com.itheima.utils; // 注意与你项目里的包名一致
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -13,12 +15,34 @@ import java.util.Map;
 /**
  * JWT工具类，用于生成和解析JWT令牌
  */
+@Component
 public class JwtUtils {
 
-    // 至少 32 字节（示例而已！请换成你自己的随机串/配置）
-    private static final String SECRET = "q2vV6nWZ4J8rLb0yS3pU9aD1kXeRgHcM7fPnYtLa"; // 40+ chars
-
-    private static final long EXPIRE_MILLIS = 12 * 60 * 60 * 1000L; // 12小时
+    // 从配置文件读取JWT密钥
+    @Value("${app.jwt.secret}")
+    private String secret;
+    
+    // 从配置文件读取JWT过期时间
+    @Value("${app.jwt.expire-millis}")
+    private long expireMillis;
+    
+    // 静态实例，用于保持静态方法的调用方式
+    private static JwtUtils instance;
+    
+    // Spring初始化时设置实例
+    public JwtUtils() {
+        instance = this;
+    }
+    
+    // 获取JWT密钥
+    private static String getSecret() {
+        return instance.secret;
+    }
+    
+    // 获取JWT过期时间
+    private static long getExpireMillis() {
+        return instance.expireMillis;
+    }
 
     /**
      * 获取JWT签名密钥
@@ -26,7 +50,7 @@ public class JwtUtils {
      */
     private static SecretKey key() {
         // 用 hmacShaKeyFor，要求字节长度 >= 32
-        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor(getSecret().getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -39,7 +63,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + EXPIRE_MILLIS))
+                .setExpiration(new Date(now + getExpireMillis()))
                 .signWith(key(), SignatureAlgorithm.HS256) // 新 API：key + 算法
                 .compact();
     }

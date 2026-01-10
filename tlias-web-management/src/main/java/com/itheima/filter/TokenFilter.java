@@ -1,6 +1,6 @@
 package com.itheima.filter;
 
-import com.itheima.util.JwtUtils;           // 按你的工具类包名
+import com.itheima.utils.JwtUtils;           // 按你的工具类包名
 import com.itheima.utils.CurrentHolder;      // 你给的 ThreadLocal 工具类
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
