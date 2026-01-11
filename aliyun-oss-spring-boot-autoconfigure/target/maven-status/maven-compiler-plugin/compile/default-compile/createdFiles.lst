@@ -1,0 +1,4 @@
+com\aliyun\oss\AliyunOssSpringBootAutoconfigureApplication.class
+com\aliyun\oss\AliOSSAutoConfiguration.class
+com\aliyun\oss\AliyunOSSOperator.class
+com\aliyun\oss\AliyunOSSProperties.class

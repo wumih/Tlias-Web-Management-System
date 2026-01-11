@@ -21,6 +21,7 @@
     <modules>
         <module>../tlias-web-management</module>
         <module>../tlias-pojo</module>
+        <module>../tlias-utils</module>
     </modules>
 
     <properties>
