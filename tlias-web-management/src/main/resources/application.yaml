@@ -1,11 +1,14 @@
+server:
+  port: ${PORT:8080}
 spring:
   application:
     name: tlias-web-management
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wb01
-    username: root
-    password: 1234
+    # 建议加上 allowPublicKeyRetrieval=true 防止部分驱动版本连接报错
+    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:wb01}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${MYSQLUSER:root}
+    password: ${MYSQLPASSWORD:123456}
   servlet:
     multipart:
       max-file-size: 500MB
