@@ -17,12 +17,11 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <!-- 关键：声明子模块 -->
-    <modules>
-        <module>../tlias-web-management</module>
-        <module>../tlias-pojo</module>
-        <module>../tlias-utils</module>
-    </modules>
+    <!--
+         移除了 <modules> 标签。
+         因为根目录的 pom.xml 已经负责聚合（Aggregation）了。
+         tlias-parent 现在只专注于做父工程（Inheritance），管理版本和依赖。
+    -->
 
     <properties>
         <java.version>21</java.version>
